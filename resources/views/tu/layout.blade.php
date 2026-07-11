@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Operator TU Dashboard') - diabsen++</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+    @yield('styles')
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between">
+    <!-- Navbar -->
+    <header class="bg-zinc-900/80 border-b border-zinc-800/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Branding -->
+                <div class="flex items-center">
+                    <a href="{{ route('tu.scanner') }}" class="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                        diabsen<span class="text-indigo-500 font-extrabold">++</span>
+                    </a>
+                    <span class="ml-2.5 px-2 py-0.5 text-[10px] font-semibold bg-zinc-800 text-zinc-300 rounded border border-zinc-700">Tata Usaha</span>
+                </div>
+
+                <!-- Navigation Desktop -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="{{ route('tu.scanner') }}" 
+                        class="text-sm font-medium transition duration-200 {{ request()->routeIs('tu.scanner') ? 'text-white border-b-2 border-indigo-500 pb-1' : 'text-zinc-400 hover:text-white' }}">
+                        Scanner QR
+                    </a>
+                    <a href="{{ route('tu.reports') }}" 
+                        class="text-sm font-medium transition duration-200 {{ request()->routeIs('tu.reports') ? 'text-white border-b-2 border-indigo-500 pb-1' : 'text-zinc-400 hover:text-white' }}">
+                        Rekap Absensi
+                    </a>
+                </nav>
+
+                <!-- Profile & Logout -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:block text-right">
+                        <p class="text-xs font-semibold text-zinc-200">{{ auth()->user()->name }}</p>
+                        <p class="text-[10px] text-zinc-500">Operator Staf</p>
+                    </div>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" 
+                            class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white p-2 rounded-xl text-xs transition duration-200 border border-zinc-700 flex items-center gap-1.5 active:scale-95">
+                            <span class="hidden sm:inline">Keluar</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        @if (session('success'))
+            <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm rounded-xl p-4 mb-6 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl p-4 mb-6 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 flex-shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                </svg>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @yield('content')
+    </main>
+
+    <!-- Mobile Navigation Bottom Bar -->
+    <div class="md:hidden bg-zinc-900 border-t border-zinc-800 sticky bottom-0 z-50 px-4 py-2 flex justify-around items-center">
+        <a href="{{ route('tu.scanner') }}" 
+            class="flex flex-col items-center justify-center py-1 transition duration-200 {{ request()->routeIs('tu.scanner') ? 'text-indigo-400' : 'text-zinc-500 hover:text-zinc-300' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+            </svg>
+            <span class="text-[9px] mt-1 font-medium">Scanner QR</span>
+        </a>
+        <a href="{{ route('tu.reports') }}" 
+            class="flex flex-col items-center justify-center py-1 transition duration-200 {{ request()->routeIs('tu.reports') ? 'text-indigo-400' : 'text-zinc-500 hover:text-zinc-300' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <span class="text-[9px] mt-1 font-medium">Rekap</span>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 border-t border-zinc-900 py-4 text-center text-xs text-zinc-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            &copy; 2026 diabsen++. Hak Cipta Dilindungi.
+        </div>
+    </footer>
+
+    @yield('scripts')
+</body>
+</html>
