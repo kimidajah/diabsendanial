@@ -6,4 +6,71 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Light Theme Color Swaps: Swapping Zinc scale to make the default theme bright */
+    --color-zinc-50: #f1f5f9;
+    --color-zinc-100: #0f172a;
+    --color-zinc-200: #1e293b;
+    --color-zinc-300: #334155;
+    --color-zinc-400: #64748b;
+    --color-zinc-500: #94a3b8;
+    --color-zinc-600: #cbd5e1;
+    --color-zinc-700: #e2e8f0;
+    --color-zinc-800: #f1f5f9;
+    --color-zinc-900: #ffffff;
+    --color-zinc-950: #f8fafc;
 }
+
+/* 
+ * Low-RAM & Low-End Mobile Performance Optimizations
+ * Disable costly render filters, animations, and heavy paint operations
+ */
+
+/* Disable CPU/GPU-heavy backdrop blur filters */
+.backdrop-blur-md,
+.backdrop-blur-xl,
+.backdrop-blur-sm,
+.backdrop-blur {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--color-zinc-900) !important;
+}
+
+/* Remove absolute glow blurs */
+.blur-3xl {
+    display: none !important;
+}
+
+/* Simplify shadows to reduce paint costs on mobile GPUs */
+.shadow-lg,
+.shadow-2xl,
+.shadow-md {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Lighten inputs text color since placeholder/text-white might clash */
+input[type="text"], 
+input[type="password"], 
+input[type="date"], 
+textarea, 
+select {
+    color: var(--color-zinc-100) !important;
+    background-color: var(--color-zinc-950) !important;
+    border-color: var(--color-zinc-700) !important;
+}
+input::placeholder, 
+textarea::placeholder {
+    color: var(--color-zinc-400) !important;
+}
+
+/* Simplify button hover scale transitions */
+.active\:scale-95,
+.active\:scale-\[0\.98\] {
+    transform: none !important;
+}
+.transition,
+.transition-all,
+.transition-opacity {
+    transition: none !important;
+}
+

@@ -3,10 +3,10 @@
 @section('title', 'Riwayat Absensi')
 
 @section('content')
-<div class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 hover:border-zinc-700/50 transition duration-300">
+<div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-sm">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-            <h3 class="text-lg font-bold text-white">Riwayat Kehadiran</h3>
+            <h3 class="text-lg font-bold text-zinc-100">Riwayat Kehadiran</h3>
             <p class="text-xs text-zinc-400 mt-0.5">Daftar lengkap catatan kehadiran Anda.</p>
         </div>
     </div>
@@ -22,10 +22,10 @@
                     <th class="py-3.5 px-4">Keterangan</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-zinc-800/50">
+            <tbody class="divide-y divide-zinc-800">
                 @forelse ($attendances as $attendance)
-                    <tr class="hover:bg-zinc-800/20 transition duration-150">
-                        <td class="py-4 px-4 font-medium text-zinc-200">
+                    <tr class="hover:bg-zinc-800">
+                        <td class="py-4 px-4 font-medium text-zinc-250">
                             {{ $attendance->date->isoFormat('dddd, D MMMM Y') }}
                         </td>
                         <td class="py-4 px-4 text-zinc-400">
@@ -33,23 +33,23 @@
                         </td>
                         <td class="py-4 px-4">
                             @if ($attendance->status == 'hadir')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full">
                                     Hadir
                                 </span>
                             @elseif ($attendance->status == 'terlambat')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-amber-50 border border-amber-200 text-amber-700 rounded-full">
                                     Terlambat
                                 </span>
                             @elseif ($attendance->status == 'izin')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-full">
                                     Izin
                                 </span>
                             @elseif ($attendance->status == 'sakit')
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-rose-50 border border-rose-200 text-rose-700 rounded-full">
                                     Sakit
                                 </span>
                             @else
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-zinc-800 border border-zinc-700 text-zinc-400 rounded-full">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium bg-zinc-50 border border-zinc-200 text-zinc-700 rounded-full">
                                     Alfa
                                 </span>
                             @endif

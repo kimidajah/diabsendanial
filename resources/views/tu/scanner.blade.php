@@ -4,10 +4,10 @@
 
 @section('styles')
 <style>
-    /* Styling html5-qrcode standard UI elements slightly to match our dark theme */
+    /* Styling html5-qrcode standard UI elements slightly to match our light theme */
     #reader {
         border: none !important;
-        background: #09090b !important;
+        background: var(--color-zinc-950) !important;
         border-radius: 1rem;
         overflow: hidden;
     }
@@ -21,9 +21,9 @@
         cursor: pointer !important;
     }
     #reader__dashboard_section_csr select {
-        background-color: #18181b !important;
-        border: 1px solid #27272a !important;
-        color: white !important;
+        background-color: var(--color-zinc-950) !important;
+        border: 1px solid var(--color-zinc-800) !important;
+        color: var(--color-zinc-100) !important;
         padding: 0.25rem 0.5rem !important;
         border-radius: 0.375rem !important;
     }
@@ -34,14 +34,14 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     
     <!-- Scanner Card -->
-    <div class="lg:col-span-2 bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 flex flex-col hover:border-zinc-700/50 transition duration-300">
+    <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col shadow-sm">
         <div class="mb-4">
-            <h3 class="text-lg font-bold text-white">Pemindai QR Code</h3>
+            <h3 class="text-lg font-bold text-zinc-100">Pemindai QR Code</h3>
             <p class="text-xs text-zinc-400 mt-0.5">Izinkan akses kamera browser, lalu arahkan kamera ke QR Code Guru.</p>
         </div>
         
         <!-- Video Scanner Container -->
-        <div class="flex-grow flex items-center justify-center p-4 bg-zinc-950/50 border border-zinc-800 rounded-xl overflow-hidden min-h-[350px]">
+        <div class="flex-grow flex items-center justify-center p-4 bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden min-h-[350px]">
             <div class="w-full max-w-md">
                 <div id="reader"></div>
             </div>
@@ -51,7 +51,7 @@
     <!-- Scanner Info & Log Kehadiran -->
     <div class="lg:col-span-1 flex flex-col gap-6">
         <!-- Status Feedback Card (Live Update) -->
-        <div id="status-card" class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 transition-all duration-300">
+        <div id="status-card" class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-sm">
             <h4 class="text-sm font-semibold text-zinc-400 mb-4">Hasil Pemindaian Terakhir</h4>
             
             <div id="status-idle" class="flex flex-col items-center justify-center py-8 text-center">
@@ -72,10 +72,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                     </svg>
                 </div>
-                <h3 id="result-title" class="font-bold text-white text-lg leading-tight">Nama Guru</h3>
+                <h3 id="result-title" class="font-bold text-zinc-100 text-lg leading-tight">Nama Guru</h3>
                 <p id="result-nidn" class="text-xs text-zinc-400 mt-1">NIDN: -</p>
                 
-                <div class="mt-4 pt-4 border-t border-zinc-850 space-y-3 text-sm">
+                <div class="mt-4 pt-4 border-t border-zinc-800 space-y-3 text-sm">
                     <div class="flex justify-between">
                         <span class="text-zinc-500">Waktu Scan:</span>
                         <span id="result-time" class="font-semibold text-zinc-200">-</span>
@@ -93,7 +93,7 @@
         </div>
         
         <!-- Quick Log list -->
-        <div class="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 flex-grow">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex-grow shadow-sm">
             <h4 class="text-sm font-semibold text-zinc-400 mb-3">Scan Sesi Ini</h4>
             <div id="scan-log-list" class="space-y-3.5 max-h-[220px] overflow-y-auto text-xs text-zinc-500">
                 <!-- Log item placeholder -->
@@ -254,10 +254,10 @@
 
             scanLogList.innerHTML = '';
             scanSessionLogs.forEach(log => {
-                const statusColor = log.status.toLowerCase() === 'hadir' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-amber-400 bg-amber-500/10 border-amber-500/20';
+                const statusColor = log.status.toLowerCase() === 'hadir' ? 'text-emerald-700 bg-emerald-50 border-emerald-250' : 'text-amber-700 bg-amber-50 border-amber-250';
                 
                 const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-zinc-950 p-2.5 rounded-lg border border-zinc-850/80 animate-fade-in";
+                item.className = "flex justify-between items-center bg-zinc-950 p-2.5 rounded-lg border border-zinc-800";
                 item.innerHTML = `
                     <div class="font-medium text-zinc-300 truncate max-w-[120px]">${log.name}</div>
                     <div class="flex items-center gap-2">
