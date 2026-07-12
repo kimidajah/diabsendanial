@@ -11,7 +11,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (file_exists(base_path('../htdocs'))) {
+            $this->app->usePublicPath(base_path('../htdocs'));
+        }
     }
 
     /**
