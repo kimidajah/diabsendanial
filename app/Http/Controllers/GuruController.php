@@ -37,9 +37,13 @@ class GuruController extends Controller
 
         $attendances = Attendance::where('teacher_id', $teacher->id)
             ->orderBy('date', 'desc')
-            ->paginate(10);
+            ->paginate(10, ['*'], 'attendance_page');
 
-        return view('guru.history', compact('attendances'));
+        $leaves = Leave::where('teacher_id', $teacher->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'leave_page');
+
+        return view('guru.history', compact('attendances', 'leaves'));
     }
 
     public function leave()
