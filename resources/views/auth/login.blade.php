@@ -31,7 +31,7 @@
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-sm">
             <h2 class="text-xl font-semibold text-zinc-100 mb-2">Selamat Datang</h2>
             <p class="text-xs text-zinc-400 mb-6">
-                Guru masuk menggunakan <span class="text-indigo-600 font-semibold">NIDN</span>. Staf Tata Usaha & Wakasek menggunakan <span class="text-indigo-600 font-semibold">Email / Username</span>.
+                Silakan masukkan <span class="text-indigo-600 font-semibold">NIDN</span> (untuk Guru) atau <span class="text-indigo-600 font-semibold">Username</span> (untuk Staf TU / Wakasek) untuk masuk.
             </p>
 
             @if ($errors->any())
@@ -47,23 +47,15 @@
 
             <form action="{{ route('login.post') }}" method="POST" class="space-y-5">
                 @csrf
-                <!-- Input Login (NIDN/Email/Username) -->
+                <!-- Input Login (NIDN/Username) -->
                 <div>
-                    <label for="login_input" class="block text-xs font-medium text-zinc-300 mb-2">NIDN / Email / Username</label>
+                    <label for="login_input" class="block text-xs font-medium text-zinc-300 mb-2">NIDN / Username</label>
                     <div class="relative">
                         <input type="text" name="login_input" id="login_input" required 
                             value="{{ old('login_input') }}"
-                            placeholder="Contoh: 19820315... atau tu@diabsen.com" 
+                            placeholder="Contoh: 19820315... atau tu" 
                             class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     </div>
-                </div>
-
-                <!-- Input Password -->
-                <div>
-                    <label for="password" class="block text-xs font-medium text-zinc-300 mb-2">Password</label>
-                    <input type="password" name="password" id="password" required 
-                        placeholder="••••••••" 
-                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                 </div>
 
                 <!-- Remember Me -->

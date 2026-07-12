@@ -20,39 +20,36 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'login_input' => 'required|string',
-            'password' => 'required|string',
         ]);
 
-        $loginInput = $credentials['login_input'];
-        $password = $credentials['password'];
+        $loginInput = $request->input('login_input');
+        $user = null;
 
         // Cek apakah input adalah NIDN (hanya angka)
         if (is_numeric($loginInput)) {
             $teacher = Teacher::where('nidn', $loginInput)->first();
             if ($teacher && $teacher->user) {
                 $user = $teacher->user;
-                if (Hash::check($password, $user->password)) {
-                    Auth::login($user, $request->has('remember'));
-                    $request->session()->regenerate();
-                    return $this->redirectUser($user);
-                }
-            }
-        } else {
-            // Cek apakah input adalah email atau username
-            $field = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-            $user = User::where($field, $loginInput)->first();
-
-            if ($user && Hash::check($password, $user->password)) {
-                Auth::login($user, $request->has('remember'));
-                $request->session()->regenerate();
-                return $this->redirectUser($user);
             }
         }
 
+        // Jika user belum ditemukan (atau input bukan NIDN), cari berdasarkan username atau email
+        if (!$user) {
+            $field = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+            $user = User::where($field, $loginInput)->first();
+        }
+
+        // Jika user ditemukan, langsung login tanpa password
+        if ($user) {
+            Auth::login($user, $request->has('remember'));
+            $request->session()->regenerate();
+            return $this->redirectUser($user);
+        }
+
         return back()->withErrors([
-            'login_input' => 'NIDN / Email / Username atau Password salah.',
+            'login_input' => 'NIDN / Username tidak terdaftar.',
         ])->onlyInput('login_input');
     }
 
