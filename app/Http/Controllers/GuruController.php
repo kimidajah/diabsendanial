@@ -77,31 +77,9 @@ class GuruController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'proof_file' => $filePath,
-            'status' => 'approved', // Langsung otomatis disetujui untuk menyederhanakan alur absensi
+            'status' => 'pending', // Status awal pending, menunggu persetujuan Wakasek
         ]);
 
-        // Otomatis tandai absensi pada range tanggal tersebut sebagai izin/sakit
-        $period = CarbonPeriod::create($request->start_date, $request->end_date);
-        foreach ($period as $date) {
-            // Cek jika hari tersebut adalah akhir pekan (Sabtu/Minggu) jika ingin dilewati, 
-            // namun secara umum kita tandai saja atau lewati sabtu minggu. Let's skip Sabtu (6) dan Minggu (7).
-            if ($date->isWeekend()) {
-                continue;
-            }
-
-            Attendance::updateOrCreate(
-                [
-                    'teacher_id' => $teacher->id,
-                    'date' => $date->format('Y-m-d'),
-                ],
-                [
-                    'status' => $request->type,
-                    'notes' => 'Izin/Sakit: ' . $request->reason,
-                    'check_in' => null,
-                ]
-            );
-        }
-
-        return redirect()->route('guru.history')->with('success', 'Pengajuan ' . ucfirst($request->type) . ' berhasil dikirim dan dicatat.');
+        return redirect()->route('guru.history')->with('success', 'Pengajuan ' . ucfirst($request->type) . ' berhasil dikirim dan menunggu persetujuan Wakasek.');
     }
 }
