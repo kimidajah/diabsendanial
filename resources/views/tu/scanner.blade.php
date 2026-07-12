@@ -4,28 +4,15 @@
 
 @section('styles')
 <style>
-    /* Styling html5-qrcode standard UI elements slightly to match our light theme */
     #reader {
         border: none !important;
-        background: var(--color-zinc-950) !important;
         border-radius: 1rem;
         overflow: hidden;
+        background: #000 !important;
     }
-    #reader__dashboard_section_csr button {
-        background-color: #4f46e5 !important;
-        border: none !important;
-        color: white !important;
-        padding: 0.5rem 1rem !important;
-        font-size: 0.75rem !important;
-        border-radius: 0.5rem !important;
-        cursor: pointer !important;
-    }
-    #reader__dashboard_section_csr select {
-        background-color: var(--color-zinc-950) !important;
-        border: 1px solid var(--color-zinc-800) !important;
-        color: var(--color-zinc-100) !important;
-        padding: 0.25rem 0.5rem !important;
-        border-radius: 0.375rem !important;
+    #reader video {
+        border-radius: 1rem;
+        object-fit: cover;
     }
 </style>
 @endsection
@@ -37,13 +24,36 @@
     <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex flex-col shadow-sm">
         <div class="mb-4">
             <h3 class="text-lg font-bold text-zinc-100">Pemindai QR Code</h3>
-            <p class="text-xs text-zinc-400 mt-0.5">Izinkan akses kamera browser, lalu arahkan kamera ke QR Code Guru.</p>
+            <p class="text-xs text-zinc-400 mt-0.5">Buka akses kamera browser dengan menekan tombol, lalu arahkan kamera ke QR Code Guru.</p>
         </div>
         
         <!-- Video Scanner Container -->
-        <div class="flex-grow flex items-center justify-center p-4 bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden min-h-[350px]">
-            <div class="w-full max-w-md">
-                <div id="reader"></div>
+        <div class="flex-grow flex flex-col items-center justify-center p-4 bg-zinc-950 border border-zinc-800 rounded-xl overflow-hidden min-h-[380px] relative">
+            <!-- Scanner target (only shown when scanning is active) -->
+            <div id="reader-wrapper" class="w-full max-w-md hidden text-center">
+                <div id="reader" class="w-full rounded-xl overflow-hidden shadow-inner"></div>
+                <div class="mt-4">
+                    <button id="btn-stop-scan" class="bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs py-2.5 px-5 rounded-xl shadow-sm transition-colors">
+                        Matikan Kamera
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Placeholder / Start Scan Button (shown when idle) -->
+            <div id="scanner-placeholder" class="flex flex-col items-center justify-center py-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                    </svg>
+                </div>
+                <h4 class="text-sm font-bold text-zinc-100 mb-2">Kamera Belum Aktif</h4>
+                <p class="text-xs text-zinc-400 max-w-xs mb-6">Klik tombol di bawah ini untuk mengizinkan akses dan mulai memindai QR Code Guru.</p>
+                <button id="btn-start-scan" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-3 px-6 rounded-xl shadow-sm transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                    </svg>
+                    Buka Kamera & Mulai Scan
+                </button>
             </div>
         </div>
     </div>
@@ -106,10 +116,10 @@
 
 @section('scripts')
 <!-- Html5Qrcode Library from CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" integrity="sha512-r6rDA7W6ZeQhvl8S7yRV0El71dBcHraKeyjD635RYuxxI60RxOPFm8TOqky1tgdhyCi63JJmZIqXJEJOPACGCA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" referrerpolicy="no-referrer"></script>
 
 <script>
-    // Web Audio API Beep Generator (No audio asset file required!)
+    // Web Audio API Beep Generator
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
     function playBeep(frequency, duration, type) {
@@ -143,10 +153,15 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        let html5QrcodeScanner = null;
+        let html5QrCode = null;
         let isProcessing = false;
         const scanLogList = document.getElementById('scan-log-list');
         let scanSessionLogs = [];
+
+        const startBtn = document.getElementById('btn-start-scan');
+        const stopBtn = document.getElementById('btn-stop-scan');
+        const placeholder = document.getElementById('scanner-placeholder');
+        const wrapper = document.getElementById('reader-wrapper');
 
         function onScanSuccess(decodedText, decodedResult) {
             if (isProcessing) return;
@@ -189,20 +204,52 @@
         }
 
         function onScanFailure(error) {
-            // Quiet fail - scanning logs output can be verbose
+            // Quiet fail
         }
 
-        // Initialize HTML5 QR Code Scanner
-        html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", 
-            { 
-                fps: 10, 
-                qrbox: { width: 250, height: 250 },
-                rememberLastUsedCamera: true
-            },
-            /* verbose= */ false
-        );
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        function startScanning() {
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+            
+            placeholder.classList.add('hidden');
+            wrapper.classList.remove('hidden');
+
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                config, 
+                onScanSuccess, 
+                onScanFailure
+            )
+            .catch(err => {
+                console.error("Gagal mengaktifkan kamera", err);
+                if (!window.isSecureContext) {
+                    alert("Gagal mengakses kamera karena halaman diakses melalui koneksi HTTP tidak aman (Insecure Context).\n\nBrowser memblokir akses kamera pada IP HTTP non-localhost. Silakan gunakan HTTPS, localhost, ngrok, atau konfigurasi Chrome Flags.");
+                } else {
+                    alert("Gagal mengakses kamera. Pastikan izin kamera telah diberikan.");
+                }
+                stopScanning();
+            });
+        }
+
+        function stopScanning() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    placeholder.classList.remove('hidden');
+                    wrapper.classList.add('hidden');
+                }).catch(err => {
+                    console.error("Gagal menonaktifkan kamera", err);
+                });
+            } else {
+                placeholder.classList.remove('hidden');
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        startBtn.addEventListener('click', startScanning);
+        stopBtn.addEventListener('click', stopScanning);
 
         // Display Scan Result Cards
         function displayResult(success, name, nidn, time, status, message) {
@@ -223,15 +270,15 @@
             if (success) {
                 iconSuccess.classList.remove('hidden');
                 iconError.classList.add('hidden');
-                iconWrapper.className = "w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4";
-                statusEl.className = status.toLowerCase() === 'hadir' ? "font-semibold text-emerald-400" : "font-semibold text-amber-400";
-                msgEl.className = "mt-4 p-3 rounded-lg text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-400";
+                iconWrapper.className = "w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mb-4";
+                statusEl.className = status.toLowerCase() === 'hadir' ? "font-semibold text-emerald-700" : "font-semibold text-amber-700";
+                msgEl.className = "mt-4 p-3 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-800";
             } else {
                 iconSuccess.classList.add('hidden');
                 iconError.classList.remove('hidden');
-                iconWrapper.className = "w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4";
-                statusEl.className = "font-semibold text-rose-400";
-                msgEl.className = "mt-4 p-3 rounded-lg text-xs bg-rose-500/10 border border-rose-500/20 text-rose-400";
+                iconWrapper.className = "w-12 h-12 rounded-full bg-rose-50 border border-rose-200 text-rose-700 flex items-center justify-center mb-4";
+                statusEl.className = "font-semibold text-rose-700";
+                msgEl.className = "mt-4 p-3 rounded-lg text-xs bg-rose-50 border border-rose-200 text-rose-850";
             }
 
             titleEl.textContent = name;
