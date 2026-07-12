@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Holiday;
 use App\Models\Setting;
 use App\Models\Teacher;
 use Carbon\Carbon;
@@ -22,6 +23,25 @@ class TuController extends Controller
             'qr_token' => 'required|string',
         ]);
 
+        $todayCarbon = Carbon::today();
+
+        // 1. Cek akhir pekan (Sabtu & Minggu)
+        if ($todayCarbon->isWeekend()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hari ini adalah hari libur akhir pekan (Sabtu/Minggu). Scan absensi dinonaktifkan.'
+            ], 422);
+        }
+
+        // 2. Cek hari libur nasional yang terdaftar di database
+        $isHoliday = Holiday::whereDate('date', $todayCarbon->format('Y-m-d'))->first();
+        if ($isHoliday) {
+            return response()->json([
+                'success' => false,
+                'message' => "Hari ini adalah hari libur: {$isHoliday->name}. Scan absensi dinonaktifkan."
+            ], 422);
+        }
+
         $teacher = Teacher::where('qr_code_token', $request->qr_token)->first();
 
         if (!$teacher) {
@@ -31,7 +51,7 @@ class TuController extends Controller
             ], 404);
         }
 
-        $today = Carbon::today()->format('Y-m-d');
+        $today = $todayCarbon->format('Y-m-d');
 
         // Periksa apakah sudah ada absensi hari ini
         $existingAttendance = Attendance::where('teacher_id', $teacher->id)
