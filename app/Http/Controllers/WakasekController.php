@@ -197,7 +197,7 @@ class WakasekController extends Controller
         $period = CarbonPeriod::create($leave->start_date, $leave->end_date);
         
         foreach ($period as $date) {
-            if ($date->isWeekend()) {
+            if ($date->isWeekend() || Holiday::whereDate('date', $date->format('Y-m-d'))->exists()) {
                 continue;
             }
 
