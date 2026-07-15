@@ -204,34 +204,114 @@ Berikut adalah ringkasan struktur kolom penting dalam database untuk referensi p
 
 ## 🚀 Cara Menjalankan Proyek di Lokal (Setup & Installation)
 
-Ikuti langkah-langkah berikut untuk menjalankan sistem di komputer lokal Anda:
+Ikuti panduan berikut ini jika Anda baru saja mengunduh proyek ini dalam bentuk **file ZIP** dari GitHub atau melakukan **git clone**:
 
-1.  **Clone / Download** repositori ini ke dalam direktori server lokal Anda.
-2.  Buka terminal/command prompt pada direktori proyek tersebut.
-3.  Jalankan perintah pintasan instalasi otomatis yang sudah disediakan di composer (script ini akan menginstal dependensi composer, menduplikasi file `.env`, membuat kunci enkripsi, membuat file database SQLite, melakukan migrasi database, menginstal npm, dan melakukan build aset):
-    ```bash
-    composer run setup
-    ```
-4.  Jalankan database seeder untuk mengisi data akun default (Wakasek, TU, dan 3 Guru) ke dalam database:
-    ```bash
-    php artisan db:seed
-    ```
-5.  Nyalakan server lokal (baik server PHP Laravel maupun server asset hot-reload Vite) dengan perintah berikut:
-    ```bash
-    composer run dev
-    ```
-6.  Buka web browser dan akses alamat default Laravel:
-    *   Aplikasi: `http://localhost:8000` atau `http://127.0.0.1:8000`
+### 📋 Prasyarat Sistem
+Sebelum memulai, pastikan komputer Anda telah terinstal:
+* **PHP** (Minimal versi 8.3)
+* **Composer** (Dependency manager untuk PHP)
+* **Node.js & NPM** (Untuk mengelola aset frontend dan Tailwind CSS)
+* Server lokal seperti **Laragon** (sangat disarankan) atau **XAMPP**.
+
+---
+
+### 🛠️ Langkah-Langkah Instalasi (Dari Awal/ZIP)
+
+#### 1. Ekstrak File Proyek
+Ekstrak file `.zip` proyek ini ke dalam direktori server lokal Anda (misalnya di `C:/laragon/www/diabsen` atau `C:/xampp/htdocs/diabsen`).
+
+#### 2. Buka Terminal / Command Prompt
+Buka terminal (Git Bash, Command Prompt, atau PowerShell) dan arahkan ke direktori proyek tersebut:
+```bash
+cd nama-folder-ekstraksi
+```
+
+#### 3. Instal Dependensi PHP (Composer)
+Unduh seluruh library/packages PHP yang dibutuhkan oleh Laravel:
+```bash
+composer install
+```
+
+#### 4. Buat File Konfigurasi `.env`
+Salin file konfigurasi contoh `.env.example` menjadi file `.env` utama:
+* **Windows (Command Prompt / CMD)**:
+  ```cmd
+  copy .env.example .env
+  ```
+* **Windows (PowerShell)**:
+  ```powershell
+  Copy-Item .env.example .env
+  ```
+* **Linux / macOS / Git Bash**:
+  ```bash
+  cp .env.example .env
+  ```
+
+#### 5. Generate Application Key (Kunci Enkripsi)
+Generate kunci keamanan unik untuk aplikasi Anda:
+```bash
+php artisan key:generate
+```
+
+#### 6. Buat Database SQLite
+Secara default, proyek ini menggunakan **SQLite** agar lebih praktis tanpa perlu setting MySQL. Anda hanya perlu membuat file database kosong bernama `database.sqlite` di dalam folder `database/`:
+* **Windows (PowerShell)**:
+  ```powershell
+  New-Item database/database.sqlite -ItemType File
+  ```
+* **Linux / macOS / Git Bash**:
+  ```bash
+  touch database/database.sqlite
+  ```
+*(Catatan: Jika Anda menggunakan Laragon atau file explorer biasa, Anda juga bisa langsung klik kanan -> New File di dalam folder `database/` lalu beri nama `database.sqlite`)*
+
+#### 7. Jalankan Migrasi & Seeder Database
+Buat seluruh tabel di database dan isi data awal (akun Wakasek, TU, dan data guru default):
+```bash
+php artisan migrate --seed
+```
+
+#### 8. Instal Dependensi Frontend (NPM)
+Instal seluruh library Javascript dan CSS (termasuk Tailwind CSS dan Vite):
+```bash
+npm install
+```
+
+#### 9. Build Aset Frontend
+Lakukan kompilasi file CSS/JS menggunakan Vite agar tampilan render dengan benar:
+* **Mode Development (Hot-Reloading)**:
+  ```bash
+  npm run dev
+  ```
+* **Mode Production (Permanen)**:
+  ```bash
+  npm run build
+  ```
+
+#### 10. Jalankan Aplikasi
+Nyalakan server Laravel lokal untuk mulai mengakses web:
+```bash
+php artisan serve
+```
+
+---
+
+### 🌐 Akses Aplikasi
+Buka web browser pilihan Anda, kemudian kunjungi alamat:
+* **`http://localhost:8000`** atau **`http://127.0.0.1:8000`**
+
+---
 
 ### 🔑 Akun Default untuk Pengujian (Seeded Accounts)
-Anda dapat masuk menggunakan akun default berikut (password untuk semua akun adalah **`password`**):
-*   **Wakasek Kurikulum**:
-    *   Username: `wakasek` (atau email `wakasek@diabsen.com`)
-*   **Staf Tata Usaha**:
-    *   Username: `tu` (atau email `tu@diabsen.com`)
-*   **Guru (Contoh 1)**:
-    *   Username / NIDN: `198203152010121001` (Nama: Budi Santoso, M.Pd)
-    *   Token QR Code: `QR_BUDI_19820315`
-*   **Guru (Contoh 2)**:
-    *   Username / NIDN: `198907242015042002` (Nama: Siti Aminah, S.Pd)
-    *   Token QR Code: `QR_SITI_19890724`
+Gunakan akun uji coba berikut untuk masuk ke sistem (password untuk seluruh akun adalah **`password`**):
+
+* **Wakasek Kurikulum** (Memantau grafik statistik, manajemen guru/akun, hari libur, jam masuk, persetujuan izin):
+  * Username / Email: `wakasek` (atau `wakasek@diabsen.com`)
+* **Staf Tata Usaha (TU)** (Melakukan scan QR Code kehadiran guru, melihat report, ekspor CSV):
+  * Username / Email: `tu` (atau `tu@diabsen.com`)
+* **Guru Contoh 1** (Melihat absensi pribadi, mengajukan izin/sakit):
+  * Username / NIDN: `198203152010121001` (Nama: Budi Santoso, M.Pd)
+  * Token QR Code: `QR_BUDI_19820315`
+* **Guru Contoh 2**:
+  * Username / NIDN: `198907242015042002` (Nama: Siti Aminah, S.Pd)
+  * Token QR Code: `QR_SITI_19890724`
